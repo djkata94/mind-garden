@@ -1,20 +1,23 @@
 [
   {
     "modello": "quercia.glb",
-    "autore": "TODO: nome autore",
-    "licenza": "CC-BY",
-    "url": ""
+    "titolo": "Petiolate oak tree",
+    "autore": "Georgeous",
+    "licenza": "CC-BY 4.0",
+    "url": "https://skfb.ly/pAswJ"
   },
   {
     "modello": "pino.glb",
-    "autore": "TODO: nome autore",
-    "licenza": "CC-BY",
-    "url": ""
+    "titolo": "Pine tree",
+    "autore": "Andriy Shekh",
+    "licenza": "CC-BY 4.0",
+    "url": "https://skfb.ly/6VKKJ"
   },
   {
     "modello": "ciliegio.glb",
-    "autore": "TODO: nome autore",
-    "licenza": "CC-BY",
-    "url": ""
+    "titolo": "Sakura Tree 01 - Low Poly Model",
+    "autore": "Jogoss",
+    "licenza": "CC-BY 4.0",
+    "url": "https://skfb.ly/oPyPz"
   }
 ]

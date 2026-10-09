@@ -56,6 +56,13 @@ The spec (SPEC.md) always wins on conflicts.
   Search, "+" button and tag chips belong to M4. Homepage placeholder stays
   until M3.
 
+- **Real CC-BY credits transcribed from owner file `crediti-modelli.txt`.**
+  `content/credits.json` now has real authors/URLs (quercia → Georgeous,
+  pino → Andriy Shekh, ciliegio → Jogoss, all CC-BY 4.0). Added an extra
+  `titolo` key per entry (work title from Sketchfab) — additive only, the
+  spec `{modello, autore, licenza, url}` shape is preserved for M5.
+  The loose `crediti-modelli.txt` stays untracked; owner can delete it.
+
 ## Futuro (non-obiettivi v1, spec section 11 — do not implement)
 
 Mobile optimization, immagini nelle note, stagioni/giorno-notte, audio,
