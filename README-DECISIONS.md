@@ -140,11 +140,12 @@ The spec (SPEC.md) always wins on conflicts.
   `stage` inviato dal client ignorato; promozione a growing assegna la
   variant se mancava; form senza select ma con hint live "Diventerà".
   Soglie future da rivedere col proprietario.
-- **#3 Erba + fondale procedurali.** `Ground`: texture canvas (base,
-  macchie, 9000 fili) + alpha radiale sul bordo del disco (niente spigoli).
-  `Backdrop`: cupola sky con gradiente (orizzonte = colore fog) + 5 colline
-  morbide che la fog dissolve. `Tree`: blob d'ombra alla base. Zero asset,
-  zero dipendenze. Verifica visiva dal proprietario su produzione.
+- **#3 pass 2 (richiesta proprietario).** Erba: texture a strati (chiazze,
+  trifoglio, fili direzionali luce/ombra, grana) + 1300 ciuffi 3D instanziati
+  (2 draw call, alphaTest, tinta per istanza). Colline: icosaedri con noise,
+  flatShading e vertex color (niente più semicerchi piatti). Cielo con sole e
+  5 nuvole lente. Fog ridotta 10-32 → 14-44 (deviazione dal prototipo voluta).
+  Verifica visiva su produzione.
 
 ## Futuro (non-obiettivi v1, spec section 11 — do not implement)
 

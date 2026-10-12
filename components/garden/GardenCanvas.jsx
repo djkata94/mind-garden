@@ -8,6 +8,7 @@ import Link from "next/link";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Sparkles, useGLTF } from "@react-three/drei";
 import Ground from "./Ground.jsx";
+import GrassTufts from "./GrassTufts.jsx";
 import Backdrop from "./Backdrop.jsx";
 import SceneLights from "./SceneLights.jsx";
 import Effects from "./Effects.jsx";
@@ -150,11 +151,12 @@ export default function GardenCanvas() {
               onPointerMissed={() => setSelectedId(null)}
             >
               <color attach="background" args={["#dce8d5"]} />
-              <fog attach="fog" args={["#dce8d5", 10, 32]} />
+              <fog attach="fog" args={["#dce8d5", 14, 44]} />
               <SceneLights />
               <Backdrop />
               <Suspense fallback={null}>
                 <Ground />
+                <GrassTufts />
                 {notes.map((note) => {
                   const plant = resolvePlant(note);
                   const shared = {
