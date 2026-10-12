@@ -65,6 +65,28 @@ The spec (SPEC.md) always wins on conflicts.
   spec `{modello, autore, licenza, url}` shape is preserved for M5.
   The loose `crediti-modelli.txt` stays untracked; owner can delete it.
 
+## M3
+
+- **GET /api/notes via `lib/notesList.js`.** Shared helper (API route + /notes
+  page) returns the spec shape with markdown-stripped 160-char excerpts
+  (`lib/excerpt.js`). Order: `updated_at` desc.
+- **Next 16 specifics (verified against installed docs):**
+  `dynamic(..., { ssr: false })` is illegal in Server Components, so
+  `app/page.js` (server) renders `GardenLoader.jsx` (client) which holds the
+  dynamic import. `lib/db.js` is a lazy singleton (`getDb()`) so imports never
+  throw without DATABASE_URL. `/notes` uses `await connection()` +
+  `export const instant = false` (request-time render, no static shell).
+- **Garden follows the prototype 1:1** (lights, fog, Sparkles, Bloom+Vignette,
+  OrbitControls limits, dpr, wind, tooltip, preload). Spec heights apply
+  (pine 2.2 / cherry 3.2 / oak 5.5). Growing notes with null variant fall back
+  to a stable id hash (same rule M4 POST will use when writing).
+- **NotePanel ships read-only in M3** (stage, title, tags as plain chips,
+  excerpt, date) so the milestone is testable; M4 extends the same file with
+  markdown, clickable tags, related and edit/delete. /notes cards link back to
+  the garden (detail pages are M5).
+- **Verified without DB:** `/api/notes` → 500 JSON italiano, `/notes` → 200
+  con banner, `/` → 200. Real garden testing needs DATABASE_URL (owner).
+
 ## Futuro (non-obiettivi v1, spec section 11 — do not implement)
 
 Mobile optimization, immagini nelle note, stagioni/giorno-notte, audio,
