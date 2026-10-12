@@ -8,11 +8,11 @@ import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
 const HILLS = [
-  { pos: [-26, -1.4, -14], scale: [20, 4.5, 10], color: "#5d7f55", seed: 1.7 },
-  { pos: [24, -1.7, -20], scale: [26, 6, 12], color: "#546f4e", seed: 4.2 },
-  { pos: [30, -2, 10], scale: [18, 4, 10], color: "#63855c", seed: 8.9 },
-  { pos: [-30, -1.8, 12], scale: [22, 5, 11], color: "#587550", seed: 2.4 },
-  { pos: [0, -2.4, -34], scale: [36, 7, 14], color: "#4f6d4a", seed: 6.1 },
+  { pos: [-30, -1.6, -16], scale: [22, 5, 11], seed: 1.7 },
+  { pos: [28, -1.9, -24], scale: [28, 6.5, 13], seed: 4.2 },
+  { pos: [36, -2.2, 12], scale: [20, 4.5, 11], seed: 8.9 },
+  { pos: [-34, -2, 14], scale: [24, 5.5, 12], seed: 2.4 },
+  { pos: [0, -2.6, -40], scale: [40, 8, 15], seed: 6.1 },
 ];
 
 const CLOUDS = [
@@ -43,7 +43,7 @@ function makeHillGeometry(seed) {
     if (v.y < -0.35) v.y = -0.35 - (v.y + 0.35) * 0.2;
     pos.setXYZ(i, v.x, v.y, v.z);
     const shade = 0.82 + 0.28 * (d - 0.78);
-    base.setHSL(0.29, 0.25, 0.32 * shade);
+    base.setHSL(0.29, 0.3, 0.25 * shade);
     colors[i * 3] = base.r;
     colors[i * 3 + 1] = base.g;
     colors[i * 3 + 2] = base.b;
