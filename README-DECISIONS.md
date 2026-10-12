@@ -116,6 +116,20 @@ The spec (SPEC.md) always wins on conflicts.
   links Note + Crediti on every public page. /notes cards now link to detail
   pages.
 
+## M6
+
+- **Upsert, non create.** Stesso `(source, source_id)` → aggiorna titolo,
+  contenuto, tags e `updated_at`, slug stabile (l'URL risposto resta valido).
+  Retry concorrenti gestiti anche a livello DB (partial unique index M1 +
+  fallback 23505 → rilettura slug).
+- **Token timing-safe** (`passwordsEqual` riusato), 401 senza/diverso,
+  500 se `SEED_TOKEN` manca. Validazioni 400 in italiano.
+- **CORS riflesso, non `*`.** `Access-Control-Allow-Origin` solo se l'Origin
+  è in `ALLOWED_ORIGINS`; `OPTIONS` (204) dichiara metodi/headers. Senza
+  Origin (server-to-server) nessun header CORS, richiesta normale.
+- **Le note seedate nascono `seed`.** Colore da palette, posizione da
+  `placePlant()`; badge sorgente già coperto da pannello/pagina (M4/M5).
+
 ## Futuro (non-obiettivi v1, spec section 11 — do not implement)
 
 Mobile optimization, immagini nelle note, stagioni/giorno-notte, audio,

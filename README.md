@@ -39,7 +39,7 @@ Spec: `spec.md` (binding). Working choices: `README-DECISIONS.md`.
 
 ## Pianta un seme (progetti fratelli via API)
 
-`POST /api/seed` con Bearer token (disponibile da M6):
+`POST /api/seed` con Bearer token (`SEED_TOKEN`):
 
 ```bash
 curl -X POST https://tuo-dominio.vercel.app/api/seed \
@@ -48,8 +48,15 @@ curl -X POST https://tuo-dominio.vercel.app/api/seed \
   -d '{"source":"tracker","source_id":"libro-123","title":"Norwegian Wood","content":"Appunti di lettura…","tags":["libri"]}'
 ```
 
-Risponde `{ "url": "/notes/<slug>" }`. L'upsert su `(source, source_id)` rende
-l'operazione idempotente: stesso `source_id` → stessa nota aggiornata.
+Risponde `{ "url": "/notes/<slug>" }`. Regole:
+
+- `source` solo `tracker` o `travelos`; `source_id` e `title` obbligatori.
+- L'upsert su `(source, source_id)` rende l'operazione idempotente: stesso
+  `source_id` → stessa nota aggiornata (lo slug resta stabile).
+- Le note arrivate da fuori nascono come semi (`stage: 'seed'`) col badge
+  della sorgente nel pannello e nella pagina.
+- CORS: il browser è ammesso solo dai domini in `ALLOWED_ORIGINS`
+  (lista separata da virgole); da server a server basta il token.
 
 ## Script
 
@@ -65,5 +72,5 @@ l'operazione idempotente: stesso `source_id` → stessa nota aggiornata.
 - [x] M3 — Giardino 3D read-only + fallback /notes
 - [x] M4 — CRUD note, pannelli, filtri, ricerca
 - [x] M5 — Pagine /notes/[slug] + /credits
-- [ ] M6 — /api/seed + rifinitura README
+- [x] M6 — /api/seed + rifinitura README
 
