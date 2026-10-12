@@ -1,18 +1,20 @@
 "use client";
 
-// Create/edit panel-modal (M4): required title, markdown textarea with
-// preview toggle, TagInput, stage select (default seed). Save → POST/PATCH,
-// the plant appears in the garden right away via context refresh.
+// Create/edit panel-modal: required title, markdown textarea with preview
+// toggle, TagInput. The stage is automatic (improvement #4): the form shows
+// what the note will become as you type. Save → POST/PATCH, the plant
+// appears in the garden right away via context refresh.
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { useGarden } from "../garden/GardenContext.jsx";
+import { stageFor } from "@/lib/stage.js";
 import TagInput from "./TagInput.jsx";
 
-const STAGE_OPTIONS = [
-  { value: "seed", label: "Seme" },
-  { value: "growing", label: "In crescita" },
-  { value: "mature", label: "Matura" },
-];
+const STAGE_HINT = {
+  seed: "Seme",
+  growing: "In crescita",
+  mature: "Matura",
+};
 
 const fieldStyle = {
   width: "100%",
@@ -30,7 +32,6 @@ export default function NoteForm() {
   const { form, closeForm, refresh, setSelectedId } = useGarden();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [stage, setStage] = useState("seed");
   const [tags, setTags] = useState([]);
   const [preview, setPreview] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -46,7 +47,6 @@ export default function NoteForm() {
     if (form.mode === "new") {
       setTitle("");
       setContent("");
-      setStage("seed");
       setTags([]);
       return;
     }
@@ -60,7 +60,6 @@ export default function NoteForm() {
       .then((data) => {
         setTitle(data.title ?? "");
         setContent(data.content ?? "");
-        setStage(data.stage ?? "seed");
         setTags(Array.isArray(data.tags) ? data.tags : []);
       })
       .catch(() => setError("Non riesco a caricare la nota."))
@@ -81,7 +80,6 @@ export default function NoteForm() {
       const payload = {
         title: title.trim(),
         content,
-        stage,
         tags: tags.map((t) => t.name),
       };
       const url =
@@ -159,22 +157,10 @@ export default function NoteForm() {
               />
             </label>
 
-            <label
-              style={{ display: "block", fontSize: 13, marginBottom: 12 }}
-            >
-              Stadio
-              <select
-                value={stage}
-                onChange={(e) => setStage(e.target.value)}
-                style={{ ...fieldStyle, marginTop: 4 }}
-              >
-                {STAGE_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <p style={{ fontSize: 13, opacity: 0.7, margin: "0 0 12px" }}>
+              Diventerà: <strong>{STAGE_HINT[stageFor(content)]}</strong>{" "}
+              ({content.length} caratteri)
+            </p>
 
             <div style={{ marginBottom: 12 }}>
               <div

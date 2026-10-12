@@ -130,6 +130,17 @@ The spec (SPEC.md) always wins on conflicts.
 - **Le note seedate nascono `seed`.** Colore da palette, posizione da
   `placePlant()`; badge sorgente già coperto da pannello/pagina (M4/M5).
 
+## Migliorie post-v1
+
+- **#1 Tag collapsible.** `TagFilter` dietro pulsante `▸ Tag` (filtro attivo
+  mostrato + ✕), chips solo su richiesta.
+- **#4 Crescita automatica.** `lib/stage.js` (puro, condiviso client/server)
+  è la fonte della regola: <300 semi, <1500 in crescita, oltre mature.
+  Ricalcolo a ogni scrittura (POST, PATCH-content, seed create/upsert);
+  `stage` inviato dal client ignorato; promozione a growing assegna la
+  variant se mancava; form senza select ma con hint live "Diventerà".
+  Soglie future da rivedere col proprietario.
+
 ## Futuro (non-obiettivi v1, spec section 11 — do not implement)
 
 Mobile optimization, immagini nelle note, stagioni/giorno-notte, audio,

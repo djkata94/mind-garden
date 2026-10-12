@@ -7,7 +7,8 @@ import { notes, noteTags } from "@/lib/schema.js";
 import { requireAdmin } from "@/lib/auth.js";
 import { getNoteFull } from "@/lib/noteFull.js";
 import {
-  STAGES,
+  stageFor,
+  variantFor,
   normalizeTags,
   linkTags,
   shapeNote,
@@ -59,14 +60,13 @@ export async function PATCH(request, { params }) {
         );
       patch.title = title;
     }
-    if (body.content !== undefined) patch.content = String(body.content ?? "");
-    if (body.stage !== undefined) {
-      if (!STAGES.includes(body.stage))
-        return Response.json(
-          { error: "Stadio non valido." },
-          { status: 400 },
-        );
-      patch.stage = body.stage;
+    if (body.content !== undefined) {
+      patch.content = String(body.content ?? "");
+      // Automatic growth (improvement #4): content drives the stage.
+      patch.stage = stageFor(patch.content);
+      if (patch.stage === "growing" && !row.variant) {
+        patch.variant = variantFor(id);
+      }
     }
     if (body.pos_x !== undefined) patch.posX = Number(body.pos_x);
     if (body.pos_z !== undefined) patch.posZ = Number(body.pos_z);

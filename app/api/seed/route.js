@@ -3,11 +3,14 @@
 // upsert on (source, source_id) so retries never duplicate. Answers
 // { url: '/notes/slug' }.
 import { eq, and } from "drizzle-orm";
+import { randomUUID } from "node:crypto";
 import { getDb } from "@/lib/db.js";
 import { notes, noteTags } from "@/lib/schema.js";
 import { passwordsEqual } from "@/lib/auth.js";
 import {
   SEED_PALETTE,
+  stageFor,
+  variantFor,
   uniqueSlug,
   normalizeTags,
   linkTags,
@@ -103,6 +106,9 @@ export async function POST(request) {
       .limit(1);
 
     const tagList = normalizeTags(body.tags);
+    const cleanContent = String(body.content ?? "");
+    // Automatic growth (improvement #4): content drives the stage.
+    const autoStage = stageFor(cleanContent);
     let slug;
 
     if (existing.length > 0) {
@@ -113,7 +119,12 @@ export async function POST(request) {
         .update(notes)
         .set({
           title,
-          content: String(body.content ?? ""),
+          content: cleanContent,
+          stage: autoStage,
+          variant:
+            autoStage === "growing" && !row.variant
+              ? variantFor(row.id)
+              : row.variant,
           updatedAt: new Date(),
         })
         .where(eq(notes.id, row.id));
@@ -127,14 +138,16 @@ export async function POST(request) {
       const pos = placePlant(
         placed.map((p) => ({ pos_x: p.posX, pos_z: p.posZ })),
       );
+      const id = randomUUID();
       const [row] = await db
         .insert(notes)
         .values({
+          id,
           slug,
           title,
-          content: String(body.content ?? ""),
-          stage: "seed",
-          variant: null,
+          content: cleanContent,
+          stage: autoStage,
+          variant: autoStage === "growing" ? variantFor(id) : null,
           color:
             SEED_PALETTE[Math.floor(Math.random() * SEED_PALETTE.length)],
           posX: pos.pos_x,
