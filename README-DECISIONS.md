@@ -107,6 +107,15 @@ The spec (SPEC.md) always wins on conflicts.
   variant-auto/tags-counts, full+related, patch, delete, 404 — test notes
   removed, DB back to 6.
 
+## M5
+
+- **Full-note logic lives in `lib/noteFull.js`.** GET /api/notes/:slug is now
+  a thin wrapper; the /notes/[slug] page reuses it (title, dates, tags,
+  markdown, related, source badge, back link). `instant = false` like /notes.
+- **/credits is fully static** (JSON import, no DB). Footer in the root layout
+  links Note + Crediti on every public page. /notes cards now link to detail
+  pages.
+
 ## Futuro (non-obiettivi v1, spec section 11 — do not implement)
 
 Mobile optimization, immagini nelle note, stagioni/giorno-notte, audio,

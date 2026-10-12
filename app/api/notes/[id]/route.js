@@ -1,10 +1,11 @@
 // /api/notes/[id] — admin writes by id; public read by slug (spec section 4).
 // Single dynamic segment: GET resolves the slug (M5 pages use it), PATCH and
 // DELETE resolve the id and require the admin session.
-import { eq, inArray } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { getDb } from "@/lib/db.js";
-import { notes, tags, noteTags } from "@/lib/schema.js";
+import { notes, noteTags } from "@/lib/schema.js";
 import { requireAdmin } from "@/lib/auth.js";
+import { getNoteFull } from "@/lib/noteFull.js";
 import {
   STAGES,
   normalizeTags,
@@ -12,63 +13,14 @@ import {
   shapeNote,
 } from "@/lib/noteWrite.js";
 
-async function findBySlug(slug) {
-  const db = getDb();
-  const rows = await db
-    .select()
-    .from(notes)
-    .where(eq(notes.slug, slug))
-    .limit(1);
-  return rows[0] ?? null;
-}
-
-async function findById(id) {
-  const db = getDb();
-  const rows = await db.select().from(notes).where(eq(notes.id, id)).limit(1);
-  return rows[0] ?? null;
-}
-
-function isUuid(value) {
-  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-    String(value || ""),
-  );
-}
-
 export async function GET(_request, { params }) {
   const { id: slug } = await params;
   try {
-    // id fallback only for UUID-shaped params: anything else is a plain
-    // slug miss (404), never a database error (500).
-    const row =
-      (await findBySlug(slug)) ??
-      (isUuid(slug) ? await findById(slug) : null);
-    if (!row)
+    // Non-UUID misses are plain 404s, never database errors (500).
+    const full = await getNoteFull(slug);
+    if (!full)
       return Response.json({ error: "Nota non trovata." }, { status: 404 });
-    const db = getDb();
-    const tagRows = await db
-      .select({ name: tags.name, slug: tags.slug })
-      .from(noteTags)
-      .innerJoin(tags, eq(noteTags.tagId, tags.id))
-      .where(eq(noteTags.noteId, row.id));
-
-    const related = await relatedNotes(row.id, tagRows.map((t) => t.slug));
-    return Response.json({
-      id: row.id,
-      slug: row.slug,
-      title: row.title,
-      content: row.content,
-      stage: row.stage,
-      variant: row.variant,
-      color: row.color,
-      pos_x: row.posX,
-      pos_z: row.posZ,
-      rot_y: row.rotY,
-      source: row.source,
-      tags: tagRows,
-      related,
-      created_at: row.createdAt,
-      updated_at: row.updatedAt,
-    });
+    return Response.json(full);
   } catch {
     return Response.json(
       { error: "Database non disponibile." },
@@ -77,40 +29,16 @@ export async function GET(_request, { params }) {
   }
 }
 
-async function relatedNotes(noteId, slugs, max = 4) {
-  if (slugs.length === 0) return [];
+async function findById(id) {
   const db = getDb();
-  const rows = await db
-    .select({
-      noteId: noteTags.noteId,
-      slug: tags.slug,
-    })
-    .from(noteTags)
-    .innerJoin(tags, eq(noteTags.tagId, tags.id));
-  const shared = new Map();
-  for (const row of rows) {
-    if (row.noteId === noteId) continue;
-    if (!slugs.includes(row.slug)) continue;
-    shared.set(row.noteId, (shared.get(row.noteId) ?? 0) + 1);
-  }
-  const ranked = [...shared.entries()]
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, max)
-    .map(([id]) => id);
-  if (ranked.length === 0) return [];
-  const found = await db
-    .select({ id: notes.id, slug: notes.slug, title: notes.title })
-    .from(notes)
-    .where(inArray(notes.id, ranked));
-  const order = new Map(ranked.map((id, i) => [id, i]));
-  return found.sort((a, b) => order.get(a.id) - order.get(b.id));
+  const rows = await db.select().from(notes).where(eq(notes.id, id)).limit(1);
+  return rows[0] ?? null;
 }
 
 export async function PATCH(request, { params }) {
   const { unauthorized } = await requireAdmin();
   if (unauthorized) return unauthorized;
-  const { id } = await params;
-  let body = {};
+  const { id } = await params;  let body = {};
   try {
     body = await request.json();
   } catch {

@@ -64,6 +64,6 @@ l'operazione idempotente: stesso `source_id` → stessa nota aggiornata.
 - [x] M2 — Auth admin
 - [x] M3 — Giardino 3D read-only + fallback /notes
 - [x] M4 — CRUD note, pannelli, filtri, ricerca
-- [ ] M5 — Pagine /notes/[slug] + /credits
+- [x] M5 — Pagine /notes/[slug] + /credits
 - [ ] M6 — /api/seed + rifinitura README
 

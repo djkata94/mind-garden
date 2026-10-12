@@ -85,7 +85,14 @@ export default async function NotesPage() {
                   </span>
                 )}
               </div>
-              <h2 style={{ fontSize: 20, margin: "0 0 8px" }}>{note.title}</h2>
+              <h2 style={{ fontSize: 20, margin: "0 0 8px" }}>
+                <Link
+                  href={`/notes/${note.slug}`}
+                  style={{ color: "#1d3325" }}
+                >
+                  {note.title}
+                </Link>
+              </h2>
               {note.tags.length > 0 && (
                 <div
                   style={{
