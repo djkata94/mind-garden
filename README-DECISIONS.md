@@ -132,6 +132,14 @@ The spec (SPEC.md) always wins on conflicts.
 
 ## Migliorie post-v1
 
+- **#2 Modelli veri (proprietario).** seed → `seme.glb` (germoglio, 0.8m,
+  niente più sfera); growing ruota pino/abete/ciliegio (variant pine|fir|
+  cherry, auto hash %3); mature ruota quercia/mango (hash %2, 5.5/4.5m).
+  `GrassTufts`: 180 cloni Quaternius (Clover + Tall Grass), niente più piani
+  canvas. Colline ancora procedurali (nessun modello fornito). Crediti
+  aggiornati (4 Sketchfab CC-BY + 2 Quaternius CC0). Nomi file case-sensitive
+  su Vercel (Clover.glb).
+
 - **#1 Tag collapsible.** `TagFilter` dietro pulsante `▸ Tag` (filtro attivo
   mostrato + ✕), chips solo su richiesta.
 - **#4 Crescita automatica.** `lib/stage.js` (puro, condiviso client/server)

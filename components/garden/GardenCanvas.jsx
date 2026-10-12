@@ -19,20 +19,30 @@ import NotePanel from "../ui/NotePanel.jsx";
 import { useGarden } from "./GardenContext.jsx";
 
 useGLTF.preload("/models/pino.glb");
+useGLTF.preload("/models/abete.glb");
 useGLTF.preload("/models/ciliegio.glb");
 useGLTF.preload("/models/quercia.glb");
+useGLTF.preload("/models/mango.glb");
+useGLTF.preload("/models/seme.glb");
+useGLTF.preload("/models/Clover.glb");
+useGLTF.preload("/models/tall_grass.glb");
 
-// Spec heights (mature 5.5, growing pine 2.2 / cherry 3.2). A growing note
-// without variant falls back to a stable id hash (same rule as POST in M4).
+// Plant mapping (improvement #2): seed → sprout model; growing rotates
+// pine/fir/cherry; mature rotates oak/mango. Missing growing variants fall
+// back to a stable id hash (same rule as POST).
 function resolvePlant(note) {
-  if (note.stage === "seed") return { kind: "seed" };
-  if (note.stage === "mature")
-    return { kind: "tree", model: "/models/quercia.glb", targetHeight: 5.5 };
-  const variant =
-    note.variant ??
-    (hashId(note.id) % 2 === 0 ? "pine" : "cherry");
+  if (note.stage === "seed")
+    return { kind: "sprout", model: "/models/seme.glb", targetHeight: 0.8 };
+  if (note.stage === "mature") {
+    return hashId(note.id) % 2 === 0
+      ? { kind: "tree", model: "/models/quercia.glb", targetHeight: 5.5 }
+      : { kind: "tree", model: "/models/mango.glb", targetHeight: 4.5 };
+  }
+  const variant = note.variant ?? ["pine", "fir", "cherry"][hashId(note.id) % 3];
   if (variant === "cherry")
     return { kind: "tree", model: "/models/ciliegio.glb", targetHeight: 3.2 };
+  if (variant === "fir")
+    return { kind: "tree", model: "/models/abete.glb", targetHeight: 2.2 };
   return { kind: "tree", model: "/models/pino.glb", targetHeight: 2.2 };
 }
 
@@ -166,8 +176,12 @@ export default function GardenCanvas() {
                     dimmed: !matches(note),
                     onSelect: (n) => setSelectedId(n.id),
                   };
-                  return plant.kind === "seed" ? (
-                    <Seed {...shared} />
+                  return plant.kind === "sprout" ? (
+                    <Seed
+                      {...shared}
+                      model={plant.model}
+                      targetHeight={plant.targetHeight}
+                    />
                   ) : (
                     <Tree
                       {...shared}

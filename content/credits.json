@@ -8,10 +8,17 @@
   },
   {
     "modello": "pino.glb",
-    "titolo": "Pine tree",
-    "autore": "Andriy Shekh",
+    "titolo": "Pine Tree [Game-ready]",
+    "autore": "Wenedi (^-^)/",
     "licenza": "CC-BY 4.0",
-    "url": "https://skfb.ly/6VKKJ"
+    "url": "https://skfb.ly/ow7yN"
+  },
+  {
+    "modello": "abete.glb",
+    "titolo": "Fir tree",
+    "autore": "Georgeous",
+    "licenza": "CC-BY 4.0",
+    "url": "https://skfb.ly/pA8TG"
   },
   {
     "modello": "ciliegio.glb",
@@ -19,5 +26,33 @@
     "autore": "Jogoss",
     "licenza": "CC-BY 4.0",
     "url": "https://skfb.ly/oPyPz"
+  },
+  {
+    "modello": "mango.glb",
+    "titolo": "Mango Tree",
+    "autore": "stealth86",
+    "licenza": "CC-BY 4.0",
+    "url": "https://skfb.ly/osUzz"
+  },
+  {
+    "modello": "seme.glb",
+    "titolo": "Seed",
+    "autore": "alecz1k",
+    "licenza": "CC-BY 4.0",
+    "url": "https://skfb.ly/6EDI6"
+  },
+  {
+    "modello": "Clover.glb",
+    "titolo": "Clover",
+    "autore": "Quaternius",
+    "licenza": "CC0",
+    "url": "https://poly.pizza/m/IQ9NVyVpUw"
+  },
+  {
+    "modello": "tall_grass.glb",
+    "titolo": "Tall Grass",
+    "autore": "Quaternius",
+    "licenza": "CC0",
+    "url": "https://poly.pizza/m/JSIYtscPmP"
   }
 ]
