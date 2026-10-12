@@ -6,7 +6,7 @@ import { useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 
-export default function Seed({ note, selected, onSelect }) {
+export default function Seed({ note, selected, dimmed, onSelect }) {
   const ref = useRef(null);
   const [hovered, setHovered] = useState(false);
 
@@ -40,7 +40,7 @@ export default function Seed({ note, selected, onSelect }) {
         <meshBasicMaterial
           color={note.color}
           transparent
-          opacity={hovered || selected ? 0.75 : 0.35}
+          opacity={dimmed ? 0.08 : hovered || selected ? 0.75 : 0.35}
         />
       </mesh>
 
@@ -49,8 +49,10 @@ export default function Seed({ note, selected, onSelect }) {
         <meshStandardMaterial
           color={note.color}
           emissive={note.color}
-          emissiveIntensity={hovered || selected ? 2 : 1.1}
+          emissiveIntensity={dimmed ? 0.25 : hovered || selected ? 2 : 1.1}
           roughness={0.3}
+          transparent={dimmed}
+          opacity={dimmed ? 0.15 : 1}
         />
       </mesh>
 

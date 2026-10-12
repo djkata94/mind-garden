@@ -61,9 +61,9 @@ l'operazione idempotente: stesso `source_id` → stessa nota aggiornata.
 ## Stato milestone
 
 - [x] M1 — Scaffold, dipendenze, schema drizzle, seed, credits, docs
-- [ ] M2 — Auth admin
-- [ ] M3 — Giardino 3D read-only + fallback /notes
-- [ ] M4 — CRUD note, pannelli, filtri, ricerca
+- [x] M2 — Auth admin
+- [x] M3 — Giardino 3D read-only + fallback /notes
+- [x] M4 — CRUD note, pannelli, filtri, ricerca
 - [ ] M5 — Pagine /notes/[slug] + /credits
 - [ ] M6 — /api/seed + rifinitura README
 

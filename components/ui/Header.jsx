@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import AuthNav from "./AuthNav.jsx";
+import SearchBox from "./SearchBox.jsx";
 
 export default function Header() {
   return (
@@ -33,7 +34,10 @@ export default function Header() {
             Coltiva le tue note come piante
           </p>
         </div>
-        <nav>
+        <nav
+          style={{ display: "flex", alignItems: "center", gap: 8 }}
+        >
+          <SearchBox />
           <Suspense fallback={<span style={{ fontSize: 14 }}>…</span>}>
             <AuthNav />
           </Suspense>

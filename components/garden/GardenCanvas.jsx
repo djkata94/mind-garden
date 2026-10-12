@@ -1,7 +1,8 @@
 "use client";
 
-// 3D garden, read-only (M3): plants from /api/notes, hover tooltip,
-// click selects (read-only panel). Loaded with ssr:false from app/page.js.
+// 3D garden (M3 read-only + M4 filters): plants from /api/notes, hover
+// tooltip, click selects (full panel). Search + tag filter dim non-matching
+// plants to opacity 0.15. Loaded with ssr:false from app/page.js.
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { Canvas } from "@react-three/fiber";
@@ -13,6 +14,7 @@ import Seed from "./Seed.jsx";
 import Tree from "./Tree.jsx";
 import GardenErrorBoundary from "./GardenErrorBoundary.jsx";
 import NotePanel from "../ui/NotePanel.jsx";
+import { useGarden } from "./GardenContext.jsx";
 
 useGLTF.preload("/models/pino.glb");
 useGLTF.preload("/models/ciliegio.glb");
@@ -75,11 +77,20 @@ function GardenBanner({ title, children }) {
 }
 
 export default function GardenCanvas() {
-  const [notes, setNotes] = useState(null);
+  const {
+    notes,
+    setNotes,
+    query,
+    activeTag,
+    selectedId,
+    setSelectedId,
+    refreshKey,
+  } = useGarden();
   const [failed, setFailed] = useState(false);
-  const [selectedId, setSelectedId] = useState(null);
 
   useEffect(() => {
+    setNotes(null);
+    setFailed(false);
     fetch("/api/notes")
       .then((res) => {
         if (!res.ok) throw new Error("notes fetch failed");
@@ -87,9 +98,16 @@ export default function GardenCanvas() {
       })
       .then((data) => setNotes(Array.isArray(data) ? data : []))
       .catch(() => setFailed(true));
-  }, []);
+  }, [refreshKey, setNotes]);
 
   const selected = notes?.find((n) => n.id === selectedId) ?? null;
+
+  const matches = (note) => {
+    const q = query.trim().toLowerCase();
+    if (q && !note.title.toLowerCase().includes(q)) return false;
+    if (activeTag && !note.tags.some((t) => t.slug === activeTag)) return false;
+    return true;
+  };
 
   return (
     <div
@@ -141,6 +159,7 @@ export default function GardenCanvas() {
                     key: note.id,
                     note,
                     selected: note.id === selectedId,
+                    dimmed: !matches(note),
                     onSelect: (n) => setSelectedId(n.id),
                   };
                   return plant.kind === "seed" ? (

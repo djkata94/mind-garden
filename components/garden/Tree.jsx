@@ -4,12 +4,14 @@
 // Behavior baseline = approved prototype: Box3 normalization (base at y=0,
 // centered, target height), shadows on every mesh, wind sway, hover scale,
 // title tooltip. Props: note, model (.glb path), targetHeight (meters).
-import { useMemo, useRef, useState } from "react";
+// dimmed fades filtered-out plants to opacity 0.15 (M4): materials are cloned
+// per plant so the fade never leaks to other trees sharing the model.
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Html, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 
-export default function Tree({ note, model, targetHeight, selected, onSelect }) {
+export default function Tree({ note, model, targetHeight, selected, dimmed, onSelect }) {
   const group = useRef(null);
   const [hovered, setHovered] = useState(false);
   const { scene } = useGLTF(model);
@@ -20,6 +22,9 @@ export default function Tree({ note, model, targetHeight, selected, onSelect }) 
       if (obj.isMesh) {
         obj.castShadow = true;
         obj.receiveShadow = true;
+        obj.material = Array.isArray(obj.material)
+          ? obj.material.map((m) => m.clone())
+          : obj.material.clone();
       }
     });
 
@@ -33,6 +38,17 @@ export default function Tree({ note, model, targetHeight, selected, onSelect }) 
     const baseScale = targetHeight / Math.max(size.y, 0.001);
     return { clone, baseScale, labelY: targetHeight + 0.6 };
   }, [scene, targetHeight]);
+
+  useEffect(() => {
+    clone.traverse((obj) => {
+      if (!obj.isMesh) return;
+      const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+      for (const mat of mats) {
+        mat.transparent = true;
+        mat.opacity = dimmed ? 0.15 : 1;
+      }
+    });
+  }, [clone, dimmed]);
 
   useFrame((state) => {
     if (!group.current) return;

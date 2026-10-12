@@ -87,6 +87,26 @@ The spec (SPEC.md) always wins on conflicts.
 - **Verified without DB:** `/api/notes` → 500 JSON italiano, `/notes` → 200
   con banner, `/` → 200. Real garden testing needs DATABASE_URL (owner).
 
+## M4
+
+- **Writes share `lib/noteWrite.js`.** Slug with `-2…` suffix, placement via
+  `placePlant()`, variant hash for growing, random seed palette
+  (`#FF9DE2/#C9A6FF/#9DE2FF/#A8E6A1/#FFD166` — spec fixes only the default),
+  tag normalize/dedupe, `updated_at` set explicitly on PATCH. Slug never
+  changes on PATCH.
+- **One dynamic segment `[id]`** for GET-by-slug (+UUID fallback, else 404 —
+  a non-UUID miss must never 500), PATCH/DELETE-by-id. GET already returns
+  full content + related (max 4 by shared tags), so M5 only builds the pages.
+- **No session endpoint.** Header search is client state (`GardenContext` in
+  root layout); the admin-only "+" renders server-side in AuthNav, and
+  `SessionFlag` bridges the session to client state for edit/delete buttons.
+- **Filters dim to 0.15, never hide.** Tree materials are cloned per plant so
+  the fade can't leak across shared .glb models. Panel tags filter + close;
+  related notes select within the loaded list.
+- **Tested vs Neon:** guards 401, validation 400, create/slug-collision/
+  variant-auto/tags-counts, full+related, patch, delete, 404 — test notes
+  removed, DB back to 6.
+
 ## Futuro (non-obiettivi v1, spec section 11 — do not implement)
 
 Mobile optimization, immagini nelle note, stagioni/giorno-notte, audio,

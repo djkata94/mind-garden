@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/ui/Header.jsx";
+import { GardenProvider } from "@/components/garden/GardenContext.jsx";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,8 +22,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="it" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body>
-        <Header />
-        {children}
+        <GardenProvider>
+          <Header />
+          {children}
+        </GardenProvider>
       </body>
     </html>
   );
