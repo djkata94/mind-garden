@@ -19,9 +19,11 @@ The spec (SPEC.md) always wins on conflicts.
   provided, so `public/models/` ships only a `.gitkeep`. Owner must drop the
   three files in before M3. `content/credits.json` has placeholder authors
   (TODO) — real CC-BY attributions required before going public (/credits, M5).
-- **Prototype missing:** `/docs/reference-app-test.jsx` is a stub describing
-  the expected baseline (spec section 6). Owner must paste the approved
-  prototype; M3 follows it.
+- **Prototype received 2026-10-12:** `/docs/reference-app-test.jsx` is now the
+  verbatim copy of the approved `apps.jsx` (header comment only addition).
+  Stage mapping for M3: sprout/sapling → growing (pino/ciliegio by variant),
+  tree → mature (quercia); target heights from spec (2.2/3.2/5.5), not the
+  prototype's 1.8/3.4/5.5. Prototype NOTES data stays mock — M3 reads the DB.
 - **Seed positions:** fixed ring coordinates (r 3–12, pairwise distance ≥ 2.0)
   instead of random `placePlant()` output, so the initial garden looks the
   same on every fresh database.
