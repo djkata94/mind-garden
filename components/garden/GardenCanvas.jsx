@@ -8,6 +8,7 @@ import Link from "next/link";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Sparkles, useGLTF } from "@react-three/drei";
 import Ground from "./Ground.jsx";
+import Backdrop from "./Backdrop.jsx";
 import SceneLights from "./SceneLights.jsx";
 import Effects from "./Effects.jsx";
 import Seed from "./Seed.jsx";
@@ -151,6 +152,7 @@ export default function GardenCanvas() {
               <color attach="background" args={["#dce8d5"]} />
               <fog attach="fog" args={["#dce8d5", 10, 32]} />
               <SceneLights />
+              <Backdrop />
               <Suspense fallback={null}>
                 <Ground />
                 {notes.map((note) => {

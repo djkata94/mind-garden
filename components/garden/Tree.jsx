@@ -81,6 +81,21 @@ export default function Tree({ note, model, targetHeight, selected, dimmed, onSe
     >
       <primitive object={clone} />
 
+      {/* contact shadow: grounds the plant even where the sun map is soft */}
+      <mesh
+        rotation={[-Math.PI / 2, 0, 0]}
+        position={[0, 0.015, 0]}
+        renderOrder={1}
+      >
+        <circleGeometry args={[0.55, 32]} />
+        <meshBasicMaterial
+          color="#1d3325"
+          transparent
+          opacity={0.22}
+          depthWrite={false}
+        />
+      </mesh>
+
       {hovered && (
         <Html
           center
