@@ -17,24 +17,9 @@ import {
   linkTags,
 } from "@/lib/noteWrite.js";
 import { placePlant } from "@/lib/placement.js";
+import { corsHeaders } from "@/lib/cors.js";
 
 const SOURCES = ["tracker", "travelos"];
-
-function allowedOrigins() {
-  return String(process.env.ALLOWED_ORIGINS || "")
-    .split(",")
-    .map((s) => s.trim())
-    .filter(Boolean);
-}
-
-function corsHeaders(request) {
-  const origin = request.headers.get("origin");
-  const headers = { Vary: "Origin" };
-  if (origin && allowedOrigins().includes(origin)) {
-    headers["Access-Control-Allow-Origin"] = origin;
-  }
-  return headers;
-}
 
 export async function OPTIONS(request) {
   return new Response(null, {

@@ -6,6 +6,7 @@ import { getDb } from "@/lib/db.js";
 import { notes, noteTags } from "@/lib/schema.js";
 import { requireAdmin } from "@/lib/auth.js";
 import { getNoteFull } from "@/lib/noteFull.js";
+import { corsHeaders } from "@/lib/cors.js";
 import {
   stageFor,
   variantFor,
@@ -14,18 +15,22 @@ import {
   shapeNote,
 } from "@/lib/noteWrite.js";
 
-export async function GET(_request, { params }) {
+export async function GET(request, { params }) {
   const { id: slug } = await params;
+  const headers = corsHeaders(request);
   try {
     // Non-UUID misses are plain 404s, never database errors (500).
     const full = await getNoteFull(slug);
     if (!full)
-      return Response.json({ error: "Nota non trovata." }, { status: 404 });
-    return Response.json(full);
+      return Response.json(
+        { error: "Nota non trovata." },
+        { status: 404, headers },
+      );
+    return Response.json(full, { headers });
   } catch {
     return Response.json(
       { error: "Database non disponibile." },
-      { status: 500 },
+      { status: 500, headers },
     );
   }
 }
