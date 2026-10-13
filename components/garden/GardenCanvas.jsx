@@ -27,6 +27,9 @@ useGLTF.preload("/models/mango.glb");
 useGLTF.preload("/models/seme.glb");
 useGLTF.preload("/models/Clover.glb");
 useGLTF.preload("/models/tall_grass.glb");
+useGLTF.preload("/models/grass.glb");
+useGLTF.preload("/models/low_poly_grass.glb");
+useGLTF.preload("/models/grassland_hill.glb");
 
 // Plant mapping (improvement #2): seed → sprout model; growing rotates
 // pine/fir/cherry; mature rotates oak/mango. Missing growing variants fall

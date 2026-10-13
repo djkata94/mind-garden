@@ -42,15 +42,15 @@ function makeGrassMap() {
   }
 
   // Blade strokes: short near-vertical dashes, dark base + light tip.
-  for (let i = 0; i < 7000; i++) {
+  for (let i = 0; i < 10000; i++) {
     const x = Math.random() * size;
     const y = Math.random() * size;
-    const len = 3 + Math.random() * 5;
+    const len = 4 + Math.random() * 6;
     const tilt = ((Math.random() - 0.5) * Math.PI) / 3;
     const dark = Math.random() < 0.6;
     ctx.strokeStyle = dark ? "#2f4c2b" : "#7fa36a";
     ctx.globalAlpha = dark ? 0.3 + Math.random() * 0.4 : 0.25 + Math.random() * 0.35;
-    ctx.lineWidth = 1 + Math.random();
+    ctx.lineWidth = 1.5 + Math.random() * 1.5;
     ctx.beginPath();
     ctx.moveTo(x, y);
     ctx.lineTo(x + Math.sin(tilt) * len, y - Math.cos(tilt) * len);

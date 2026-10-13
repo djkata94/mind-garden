@@ -1,18 +1,19 @@
 "use client";
 
-// Backdrop (improvement #3, pass 2), all procedural: gradient sky dome with
-// sun glow, drifting stylized clouds, and faceted low-poly hills (noise
-// displaced, vertex-shaded) that the fog dissolves. No assets, no async.
+// Backdrop: gradient sky dome with sun glow, drifting stylized clouds, and
+// real grassland_hill clones on the horizon (normalized to ~24m wide so any
+// authoring scale works). No async loads beyond the .glb itself.
 import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
+import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 
-const HILLS = [
-  { pos: [-30, -1.6, -16], scale: [22, 5, 11], seed: 1.7 },
-  { pos: [28, -1.9, -24], scale: [28, 6.5, 13], seed: 4.2 },
-  { pos: [36, -2.2, 12], scale: [20, 4.5, 11], seed: 8.9 },
-  { pos: [-34, -2, 14], scale: [24, 5.5, 12], seed: 2.4 },
-  { pos: [0, -2.6, -40], scale: [40, 8, 15], seed: 6.1 },
+const HILL_SPOTS = [
+  { pos: [-30, -0.6, -16], rotY: 0.5, mul: 1.0 },
+  { pos: [28, -0.8, -24], rotY: 2.1, mul: 1.2 },
+  { pos: [36, -1.0, 12], rotY: 4.0, mul: 0.9 },
+  { pos: [-34, -0.8, 14], rotY: 1.2, mul: 1.1 },
+  { pos: [0, -1.2, -40], rotY: 3.0, mul: 1.5 },
 ];
 
 const CLOUDS = [
@@ -22,36 +23,6 @@ const CLOUDS = [
   { pos: [-10, 28, 45], scale: [12, 3.5, 5], speed: 0.12 },
   { pos: [35, 30, 30], scale: [9, 3, 4], speed: 0.16 },
 ];
-
-// Lumpy organic hill: vertex noise + darker crevices, flat shaded.
-function makeHillGeometry(seed) {
-  const geo = new THREE.IcosahedronGeometry(1, 3);
-  const pos = geo.attributes.position;
-  const colors = new Float32Array(pos.count * 3);
-  const v = new THREE.Vector3();
-  const base = new THREE.Color();
-  for (let i = 0; i < pos.count; i++) {
-    v.fromBufferAttribute(pos, i);
-    const n = v.clone().normalize();
-    const d =
-      1 +
-      0.22 * Math.sin(3 * n.x + seed) * Math.sin(3 * n.z + seed * 1.7) +
-      0.1 * Math.sin(7 * n.y + seed * 2.3) +
-      0.06 * Math.sin(13 * n.x * n.z + seed);
-    v.copy(n).multiplyScalar(d);
-    // Flatten the underside so hills sit in the ground.
-    if (v.y < -0.35) v.y = -0.35 - (v.y + 0.35) * 0.2;
-    pos.setXYZ(i, v.x, v.y, v.z);
-    const shade = 0.82 + 0.28 * (d - 0.78);
-    base.setHSL(0.29, 0.3, 0.25 * shade);
-    colors[i * 3] = base.r;
-    colors[i * 3 + 1] = base.g;
-    colors[i * 3 + 2] = base.b;
-  }
-  geo.setAttribute("color", new THREE.BufferAttribute(colors, 3));
-  geo.computeVertexNormals();
-  return geo;
-}
 
 function makeGlowTexture() {
   const size = 128;
@@ -71,9 +42,23 @@ function makeGlowTexture() {
 
 export default function Backdrop() {
   const cloudsRef = useRef(null);
+  const { scene: hill } = useGLTF("/models/grassland_hill.glb");
 
-  const { skyMat, hillGeos, glowTex } = useMemo(
-    () => ({
+  const { skyMat, glowTex, hillClones } = useMemo(() => {
+    const box = new THREE.Box3().setFromObject(hill);
+    const size = box.getSize(new THREE.Vector3());
+    const unit = 24 / Math.max(size.x, size.z, 0.001);
+    const hillClones = HILL_SPOTS.map((spot, i) => {
+      const clone = hill.clone();
+      clone.traverse((obj) => {
+        if (obj.isMesh) {
+          obj.castShadow = false;
+          obj.receiveShadow = false;
+        }
+      });
+      return { ...spot, key: `hill-${i}`, clone, scale: unit * spot.mul };
+    });
+    return {
       skyMat: new THREE.ShaderMaterial({
         side: THREE.BackSide,
         depthWrite: false,
@@ -100,11 +85,10 @@ export default function Backdrop() {
           }
         `,
       }),
-      hillGeos: HILLS.map((hill) => makeHillGeometry(hill.seed)),
       glowTex: makeGlowTexture(),
-    }),
-    [],
-  );
+      hillClones,
+    };
+  }, [hill]);
 
   useFrame((_, delta) => {
     if (!cloudsRef.current) return;
@@ -150,15 +134,14 @@ export default function Backdrop() {
         ))}
       </group>
 
-      {HILLS.map((hill, i) => (
-        <mesh
-          key={i}
-          geometry={hillGeos[i]}
-          position={hill.pos}
-          scale={hill.scale}
-        >
-          <meshStandardMaterial vertexColors flatShading roughness={1} />
-        </mesh>
+      {hillClones.map((h) => (
+        <primitive
+          key={h.key}
+          object={h.clone}
+          position={h.pos}
+          rotation={[0, h.rotY, 0]}
+          scale={h.scale}
+        />
       ))}
     </>
   );

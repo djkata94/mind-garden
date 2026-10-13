@@ -148,6 +148,12 @@ The spec (SPEC.md) always wins on conflicts.
   `stage` inviato dal client ignorato; promozione a growing assegna la
   variant se mancava; form senza select ma con hint live "Diventerà".
   Soglie future da rivedere col proprietario.
+- **#3 pass 4: prato instanziato + colline vere.** `GrassTufts`: 4 set
+  (Clover/Tall/LowPoly/grass) come InstancedMesh (~2400 ciuffi, ~4 draw),
+  merge geometrie con fallback a cloni cappati; colline procedurali
+  sostituite da 5 cloni `grassland_hill` normalizzati a ~24m. Crediti +3
+  (noahm1216, Natural_Disbuster, 3D MODELAR, CC-BY). Texture prato
+  rinforzata. Verifica visiva su produzione.
 - **#3 pass 2 (richiesta proprietario).** Erba: texture a strati (chiazze,
   trifoglio, fili direzionali luce/ombra, grana) + 1300 ciuffi 3D instanziati
   (2 draw call, alphaTest, tinta per istanza). Colline: icosaedri con noise,
