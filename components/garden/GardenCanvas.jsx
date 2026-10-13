@@ -10,6 +10,7 @@ import { OrbitControls, Sparkles, useGLTF } from "@react-three/drei";
 import Ground from "./Ground.jsx";
 import GrassTufts from "./GrassTufts.jsx";
 import Backdrop from "./Backdrop.jsx";
+import FlyRig from "./FlyRig.jsx";
 import SceneLights from "./SceneLights.jsx";
 import Effects from "./Effects.jsx";
 import Seed from "./Seed.jsx";
@@ -235,12 +236,14 @@ export default function GardenCanvas() {
                 />
               </Suspense>
               <OrbitControls
+                makeDefault
                 target={[0, 2.5, 0]}
                 maxPolarAngle={Math.PI / 2.15}
                 minDistance={5}
                 maxDistance={26}
                 enablePan={false}
               />
+              <FlyRig />
               <Effects />
             </Canvas>
             {selected && (

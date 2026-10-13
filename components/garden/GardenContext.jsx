@@ -21,6 +21,7 @@ export function GardenProvider({ children }) {
   const [form, setForm] = useState(null); // null | { mode: "new" } | { mode: "edit", id, slug }
   const [refreshKey, setRefreshKey] = useState(0);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [flyTo, setFlyTo] = useState(null); // null | { x, z, key }
 
   const refresh = useCallback(() => setRefreshKey((k) => k + 1), []);
   const openNew = useCallback(() => setForm({ mode: "new" }), []);
@@ -33,6 +34,10 @@ export function GardenProvider({ children }) {
     (slug) => setActiveTag((cur) => (cur === slug ? null : slug)),
     [],
   );
+  const flyToNote = useCallback((note) => {
+    if (!note) return;
+    setFlyTo({ x: note.pos_x, z: note.pos_z, key: Date.now() });
+  }, []);
 
   const value = useMemo(
     () => ({
@@ -53,6 +58,8 @@ export function GardenProvider({ children }) {
       refresh,
       isAdmin,
       setIsAdmin,
+      flyTo,
+      flyToNote,
     }),
     [
       notes,
@@ -62,11 +69,13 @@ export function GardenProvider({ children }) {
       form,
       refreshKey,
       isAdmin,
+      flyTo,
       refresh,
       openNew,
       openEdit,
       closeForm,
       toggleTag,
+      flyToNote,
     ],
   );
 
