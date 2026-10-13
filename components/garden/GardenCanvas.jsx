@@ -3,7 +3,7 @@
 // 3D garden (M3 read-only + M4 filters): plants from /api/notes, hover
 // tooltip, click selects (full panel). Search + tag filter dim non-matching
 // plants to opacity 0.15. Loaded with ssr:false from app/page.js.
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Sparkles, useGLTF } from "@react-three/drei";
@@ -100,17 +100,52 @@ export default function GardenCanvas() {
   } = useGarden();
   const [failed, setFailed] = useState(false);
 
+  // Live updates (improvement #5): sibling apps write straight to the DB,
+  // so the list refetches silently — every 30s (tab visible only) and on
+  // focus/return. Selection and filters survive (derived from fresh notes).
+  const load = useCallback(
+    (initial = false) => {
+      if (initial) {
+        setNotes(null);
+        setFailed(false);
+      }
+      fetch("/api/notes")
+        .then((res) => {
+          if (!res.ok) throw new Error("notes fetch failed");
+          return res.json();
+        })
+        .then((data) => {
+          setNotes(Array.isArray(data) ? data : []);
+          setFailed(false);
+        })
+        .catch(() => {
+          if (initial) setFailed(true);
+        });
+    },
+    [setNotes],
+  );
+
   useEffect(() => {
-    setNotes(null);
-    setFailed(false);
-    fetch("/api/notes")
-      .then((res) => {
-        if (!res.ok) throw new Error("notes fetch failed");
-        return res.json();
-      })
-      .then((data) => setNotes(Array.isArray(data) ? data : []))
-      .catch(() => setFailed(true));
-  }, [refreshKey, setNotes]);
+    load(true);
+  }, [refreshKey, load]);
+
+  useEffect(() => {
+    const tick = () => {
+      if (!document.hidden) load();
+    };
+    const onFocus = () => load();
+    const onVisibility = () => {
+      if (!document.hidden) load();
+    };
+    const timer = setInterval(tick, 30000);
+    window.addEventListener("focus", onFocus);
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      clearInterval(timer);
+      window.removeEventListener("focus", onFocus);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, [load]);
 
   const selected = notes?.find((n) => n.id === selectedId) ?? null;
 
