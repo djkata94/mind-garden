@@ -1,13 +1,14 @@
 "use client";
 
-// Real grass (improvements #2+#3): instanced Quaternius Clover + Tall Grass
-// clones scattered in the ring. Shared geometries/materials, no shadows
-// (perf), fogged like the ground.
+// Real grass (improvements #2+#3): Quaternius Clover + Tall Grass clones
+// scattered densely and small. Shared geometries/materials, muted tint,
+// no shadows (perf), fogged like the ground.
 import { useMemo } from "react";
 import { useGLTF } from "@react-three/drei";
+import * as THREE from "three";
 
-const CLOVER_COUNT = 90;
-const GRASS_COUNT = 90;
+const CLOVER_COUNT = 200;
+const GRASS_COUNT = 320;
 
 function scatter(count, minScale, maxScale) {
   const items = [];
@@ -34,16 +35,34 @@ function prepClone(scene) {
   return clone;
 }
 
+// Mute the neon Quaternius greens once (materials are shared across clones,
+// so per-clone tinting would compound to black).
+function muteScene(scene) {
+  if (scene.userData.muted) return;
+  scene.userData.muted = true;
+  const mute = new THREE.Color("#b9c9a8");
+  scene.traverse((obj) => {
+    if (obj.isMesh) {
+      const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+      for (const mat of mats) {
+        if (mat.color) mat.color.multiply(mute);
+      }
+    }
+  });
+}
+
 export default function GrassTufts() {
   const { scene: clover } = useGLTF("/models/Clover.glb");
   const { scene: tallGrass } = useGLTF("/models/tall_grass.glb");
 
   const tufts = useMemo(() => {
+    muteScene(clover);
+    muteScene(tallGrass);
     const list = [];
-    scatter(CLOVER_COUNT, 1.2, 2.4).forEach((t, i) =>
+    scatter(CLOVER_COUNT, 0.8, 1.5).forEach((t, i) =>
       list.push({ ...t, key: `clover-${i}`, clone: prepClone(clover) }),
     );
-    scatter(GRASS_COUNT, 1.2, 2.2).forEach((t, i) =>
+    scatter(GRASS_COUNT, 0.4, 0.7).forEach((t, i) =>
       list.push({ ...t, key: `grass-${i}`, clone: prepClone(tallGrass) }),
     );
     return list;
