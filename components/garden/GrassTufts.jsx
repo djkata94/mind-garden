@@ -59,10 +59,10 @@ export default function GrassTufts() {
     muteScene(clover);
     muteScene(tallGrass);
     const list = [];
-    scatter(CLOVER_COUNT, 0.8, 1.5).forEach((t, i) =>
+    scatter(CLOVER_COUNT, 0.5, 0.9).forEach((t, i) =>
       list.push({ ...t, key: `clover-${i}`, clone: prepClone(clover) }),
     );
-    scatter(GRASS_COUNT, 0.4, 0.7).forEach((t, i) =>
+    scatter(GRASS_COUNT, 0.25, 0.45).forEach((t, i) =>
       list.push({ ...t, key: `grass-${i}`, clone: prepClone(tallGrass) }),
     );
     return list;
