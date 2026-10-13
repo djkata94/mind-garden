@@ -1,4 +1,5 @@
 // POST /api/seed — ingest from sibling projects (spec section 4).
+// GET /api/seed?source=&source_id= — planted check, answers { url: null }.
 // Bearer token auth (SEED_TOKEN), CORS restricted to ALLOWED_ORIGINS,
 // upsert on (source, source_id) so retries never duplicate. Answers
 // { url: '/notes/slug' }.
@@ -52,6 +53,56 @@ function bearerToken(request) {
   const [scheme, token] = header.split(" ");
   if (scheme !== "Bearer" || !token) return null;
   return token;
+}
+
+function checkAuth(request) {
+  const headers = corsHeaders(request);
+  if (!process.env.SEED_TOKEN) {
+    return {
+      error: Response.json(
+        { error: "Ingest non configurato (SEED_TOKEN mancante)." },
+        { status: 500, headers },
+      ),
+    };
+  }
+  const token = bearerToken(request);
+  if (!token || !passwordsEqual(token, process.env.SEED_TOKEN)) {
+    return {
+      error: Response.json({ error: "Non autorizzato." }, { status: 401, headers }),
+    };
+  }
+  return { headers };
+}
+
+export async function GET(request) {
+  const { error, headers } = checkAuth(request);
+  if (error) return error;
+  const url = new URL(request.url);
+  const source = String(url.searchParams.get("source") || "");
+  const sourceId = String(url.searchParams.get("source_id") || "").trim();
+  if (!SOURCES.includes(source) || !sourceId) {
+    return Response.json(
+      { error: "Servono source (tracker|travelos) e source_id." },
+      { status: 400, headers },
+    );
+  }
+  try {
+    const db = getDb();
+    const rows = await db
+      .select({ slug: notes.slug })
+      .from(notes)
+      .where(and(eq(notes.source, source), eq(notes.sourceId, sourceId)))
+      .limit(1);
+    return Response.json(
+      { url: rows.length > 0 ? `/notes/${rows[0].slug}` : null },
+      { headers },
+    );
+  } catch {
+    return Response.json(
+      { error: "Database non disponibile." },
+      { status: 500, headers },
+    );
+  }
 }
 
 export async function POST(request) {

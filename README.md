@@ -57,6 +57,8 @@ Risponde `{ "url": "/notes/<slug>" }`. Regole:
   della sorgente nel pannello e nella pagina.
 - CORS: il browser è ammesso solo dai domini in `ALLOWED_ORIGINS`
   (lista separata da virgole); da server a server basta il token.
+- Check: `GET /api/seed?source=…&source_id=…` (stesso Bearer) risponde
+  `{ "url": "/notes/<slug>" }` oppure `{ "url": null }` se non piantato.
 
 ## Script
 
