@@ -35,118 +35,113 @@ export default function LoginCard() {
   }
 
   return (
-    <>
-      {/* Logo di benvenuto sopra il contenitore: il seme che germoglia */}
+    <form
+      onSubmit={handleSubmit}
+      style={{
+        background: "#ffffff",
+        border: "1px solid #b9cfb0",
+        borderRadius: 24,
+        padding: 40,
+        maxWidth: 420,
+        width: "100%",
+        boxShadow: "0 24px 60px rgba(47, 93, 58, 0.16)",
+      }}
+    >
+      {/* Logo di benvenuto sopra il contenitore: semino che germoglia */}
       <div
         style={{
           display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: 12,
-          marginBottom: 24,
+          justifyContent: "center",
+          marginBottom: 16,
         }}
       >
         <img
-          src="/favicon.png"
-          alt="Seme che germoglia"
-          width={64}
-          height={64}
-          style={{
-            borderRadius: 14,
-            display: "block",
-            boxShadow: "0 4px 12px rgba(47, 93, 58, 0.25)",
-          }}
+          src="/logo.svg"
+          alt="Logo"
+          width={60}
+          height={60}
+          style={{ display: "block", filter: "drop-shadow(0 4px 8px rgba(47, 93, 58, 0.2))" }}
         />
-        <span
-          style={{
-            fontSize: 22,
-            fontWeight: 800,
-            color: "#1d3325",
-            letterSpacing: -0.5,
-          }}
-        >
-          Il mio giardino digitale
-        </span>
       </div>
 
-      <form
-        onSubmit={handleSubmit}
+      <h2
         style={{
-          background: "#ffffff",
-          border: "1px solid #b9cfb0",
-          borderRadius: 20,
-          padding: 36,
-          maxWidth: 420,
-          width: "100%",
-          boxShadow: "0 20px 48px rgba(47, 93, 58, 0.14)",
+          fontSize: 24,
+          fontWeight: 800,
+          color: "#1d3325",
+          textAlign: "center",
+          marginBottom: 8,
+          letterSpacing: -0.5,
         }}
       >
-        <p
-          style={{
-            fontSize: 15,
-            color: "#5a7a60",
-            marginBottom: 26,
-            textAlign: "center",
-          }}
-        >
-          Accedi all&#8217;area riservata per gestire le tue note.
+        Il mio giardino digitale
+      </h2>
+      <p
+        style={{
+          fontSize: 14,
+          color: "#5a7a60",
+          textAlign: "center",
+          marginBottom: 32,
+        }}
+      >
+        Accedi all&#8217;area riservata per gestire le tue note.
+      </p>
+
+      <label
+        htmlFor="password"
+        style={{
+          display: "block",
+          fontWeight: 700,
+          fontSize: 14,
+          color: "#1d3325",
+          marginBottom: 8,
+        }}
+      >
+        Password
+      </label>
+      <input
+        id="password"
+        name="password"
+        type="password"
+        autoComplete="current-password"
+        required
+        value={password}
+        onChange={(event) => setPassword(event.target.value)}
+        style={{
+          width: "100%",
+          padding: "12px 16px",
+          borderRadius: 12,
+          border: "1px solid #9db894",
+          marginBottom: 24,
+          fontSize: 15,
+          outline: "none",
+          boxShadow: "inset 0 1px 3px rgba(0,0,0,0.06)",
+          background: "#f7faf7",
+        }}
+      />
+      {error ? (
+        <p role="alert" style={{ color: "#c0392b", fontSize: 13, marginBottom: 22, textAlign: "center" }}>
+          {error}
         </p>
-        <label
-          htmlFor="password"
-          style={{
-            display: "block",
-            fontWeight: 700,
-            fontSize: 14,
-            color: "#1d3325",
-            marginBottom: 8,
-          }}
-        >
-          Password
-        </label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          autoComplete="current-password"
-          required
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          style={{
-            width: "100%",
-            padding: "11px 14px",
-            borderRadius: 10,
-            border: "1px solid #9db894",
-            marginBottom: 18,
-            fontSize: 15,
-            outline: "none",
-            boxShadow: "inset 0 1px 3px rgba(0,0,0,0.06)",
-            background: "#fafafa",
-          }}
-        />
-        {error ? (
-          <p role="alert" style={{ color: "#c0392b", fontSize: 13, marginBottom: 18 }}>
-            {error}
-          </p>
-        ) : null}
-        <button
-          type="submit"
-          disabled={pending}
-          style={{
-            width: "100%",
-            padding: "11px 14px",
-            borderRadius: 10,
-            border: "none",
-            background: "#2f5d3a",
-            color: "#fff",
-            fontWeight: 700,
-            fontSize: 15,
-            cursor: pending ? "wait" : "pointer",
-            boxShadow: "0 4px 10px rgba(47, 93, 58, 0.3)",
-          }}
-        >
-          {pending ? "Accesso in corso…" : "Accedi"}
-        </button>
-      </form>
-    </>
+      ) : null}
+      <button
+        type="submit"
+        disabled={pending}
+        style={{
+          width: "100%",
+          padding: "12px 16px",
+          borderRadius: 12,
+          border: "none",
+          background: "#2f5d3a",
+          color: "#fff",
+          fontWeight: 700,
+          fontSize: 16,
+          cursor: pending ? "wait" : "pointer",
+          boxShadow: "0 6px 14px rgba(47, 93, 58, 0.35)",
+        }}
+      >
+        {pending ? "Accesso in corso…" : "Accedi"}
+      </button>
+    </form>
   );
 }

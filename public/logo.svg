@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="seedGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#a5896f"/>
+      <stop offset="100%" stop-color="#6d4c41"/>
+    </linearGradient>
+    <linearGradient id="leafGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#a5d6a7"/>
+      <stop offset="100%" stop-color="#2e7d32"/>
+    </linearGradient>
+  </defs>
+  <!-- seme -->
+  <ellipse cx="50" cy="70" rx="17" ry="12" fill="url(#seedGrad)"/>
+  <!-- stelo -->
+  <path d="M50 60 Q50 42 44 36 Q40 32 48 32 Q56 32 52 36 Q46 42 46 60" fill="none" stroke="#4caf50" stroke-width="5" stroke-linecap="round"/>
+  <!-- foglie -->
+  <path d="M48 32 Q28 44 26 56 Q40 68 52 62" fill="url(#leafGrad)"/>
+  <path d="M48 32 Q72 44 74 56 Q60 68 48 62" fill="url(#leafGrad)"/>
+  <!-- goccia di rugiada -->
+  <circle cx="52" cy="36" r="3" fill="#4fc3f7"/>
+</svg>

@@ -23,7 +23,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="it" className={`${geistSans.variable} ${geistMono.variable}`}>
       <head>
-        <link rel="icon" type="image/png" href="/favicon.png" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
       </head>
       <body>
         <GardenProvider>
