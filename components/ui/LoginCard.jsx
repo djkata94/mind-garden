@@ -40,15 +40,57 @@ export default function LoginCard() {
       style={{
         background: "#ffffff",
         border: "1px solid #b9cfb0",
-        borderRadius: 12,
-        padding: 24,
-        maxWidth: 360,
+        borderRadius: 16,
+        padding: 32,
+        maxWidth: 400,
         width: "100%",
+        boxShadow: "0 12px 32px rgba(47, 93, 58, 0.12)",
       }}
     >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          marginBottom: 20,
+        }}
+      >
+        <img
+          src="/favicon.png"
+          alt="Logo"
+          width={34}
+          height={34}
+          style={{ borderRadius: 7, display: "block" }}
+        />
+        <span
+          style={{
+            fontSize: 19,
+            fontWeight: 700,
+            color: "#1d3325",
+            letterSpacing: -0.5,
+          }}
+        >
+          Il mio giardino digitale
+        </span>
+      </div>
+      <p
+        style={{
+          fontSize: 14,
+          color: "#5a7a60",
+          marginBottom: 24,
+        }}
+      >
+        Accedi all&#8217;area riservata per gestire le tue note.
+      </p>
       <label
         htmlFor="password"
-        style={{ display: "block", fontWeight: 600, marginBottom: 8 }}
+        style={{
+          display: "block",
+          fontWeight: 600,
+          fontSize: 14,
+          color: "#1d3325",
+          marginBottom: 8,
+        }}
       >
         Password
       </label>
@@ -65,11 +107,14 @@ export default function LoginCard() {
           padding: "10px 12px",
           borderRadius: 8,
           border: "1px solid #9db894",
-          marginBottom: 12,
+          marginBottom: 14,
+          fontSize: 14,
+          outline: "none",
+          boxShadow: "inset 0 1px 2px rgba(0,0,0,0.06)",
         }}
       />
       {error ? (
-        <p role="alert" style={{ color: "#a33", marginBottom: 12 }}>
+        <p role="alert" style={{ color: "#a33", fontSize: 13, marginBottom: 14 }}>
           {error}
         </p>
       ) : null}
@@ -84,6 +129,7 @@ export default function LoginCard() {
           background: "#2f5d3a",
           color: "#fff",
           fontWeight: 600,
+          fontSize: 15,
           cursor: pending ? "wait" : "pointer",
         }}
       >

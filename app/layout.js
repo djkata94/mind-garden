@@ -22,6 +22,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="it" className={`${geistSans.variable} ${geistMono.variable}`}>
+      <head>
+        <link rel="icon" type="image/png" href="/favicon.png" />
+      </head>
       <body>
         <GardenProvider>
           <Header />
