@@ -1,8 +1,14 @@
+"use client";
+
 import Link from "next/link";
 import { Suspense } from "react";
-import AuthNav from "./AuthNav.jsx";
+import dynamic from "next/dynamic";
 import SearchBox from "./SearchBox.jsx";
 import TagButton from "./TagButton.jsx";
+
+// AuthNav dipende da next/headers (solo Server Component), quindi viene
+// caricato dinamicamente solo sul client.
+const AuthNav = dynamic(() => import("./AuthNav.jsx"), { ssr: false });
 
 export default function Header() {
   return (
