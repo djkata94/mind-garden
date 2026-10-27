@@ -109,7 +109,7 @@ export default function TagButton() {
                 Azzera
               </button>
             </div>
-            <div style={{ maxHeight: 300, overflowY: auto }}>
+            <div style={{ maxHeight: 300, overflowY: "auto" }}>
               {tags.length === 0 ? (
                 <p style={{ fontSize: 13, opacity: 0.7, textAlign: "center" }}>
                   Nessun tag disponibile.
