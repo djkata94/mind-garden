@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import AuthNav from "./AuthNav.jsx";
 import SearchBox from "./SearchBox.jsx";
+import TagButton from "./TagButton.jsx";
 
 export default function Header() {
   return (
@@ -38,6 +39,7 @@ export default function Header() {
           style={{ display: "flex", alignItems: "center", gap: 8 }}
         >
           <SearchBox />
+          <TagButton />
           <Suspense fallback={<span style={{ fontSize: 14 }}>…</span>}>
             <AuthNav />
           </Suspense>

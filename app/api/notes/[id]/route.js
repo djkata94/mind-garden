@@ -12,6 +12,7 @@ import {
   variantFor,
   normalizeTags,
   linkTags,
+  pruneOrphanTags,
   shapeNote,
 } from "@/lib/noteWrite.js";
 
@@ -86,6 +87,7 @@ export async function PATCH(request, { params }) {
     if (body.tags !== undefined) {
       await db.delete(noteTags).where(eq(noteTags.noteId, id));
       await linkTags(id, normalizeTags(body.tags));
+      await pruneOrphanTags();
     }
     return Response.json(await shapeNote(updated));
   } catch {
@@ -106,6 +108,7 @@ export async function DELETE(_request, { params }) {
       return Response.json({ error: "Nota non trovata." }, { status: 404 });
     const db = getDb();
     await db.delete(notes).where(eq(notes.id, id));
+    await pruneOrphanTags();
     return Response.json({ ok: true });
   } catch {
     return Response.json(
