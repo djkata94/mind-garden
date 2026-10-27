@@ -15,6 +15,7 @@ import {
   uniqueSlug,
   normalizeTags,
   linkTags,
+  pruneOrphanTags,
 } from "@/lib/noteWrite.js";
 import { placePlant } from "@/lib/placement.js";
 import { corsHeaders } from "@/lib/cors.js";
@@ -166,6 +167,8 @@ export async function POST(request) {
         .where(eq(notes.id, row.id));
       await db.delete(noteTags).where(eq(noteTags.noteId, row.id));
       await linkTags(row.id, tagList);
+      // Un progetto fratello può aver tolto dei tag alla nota: via quelli rimasti a zero
+      await pruneOrphanTags();
     } else {
       slug = await uniqueSlug(title);
       const placed = await db
