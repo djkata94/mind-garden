@@ -35,37 +35,32 @@ export default function LoginCard() {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      style={{
-        background: "#ffffff",
-        border: "1px solid #b9cfb0",
-        borderRadius: 16,
-        padding: 32,
-        maxWidth: 400,
-        width: "100%",
-        boxShadow: "0 12px 32px rgba(47, 93, 58, 0.12)",
-      }}
-    >
+    <>
+      {/* Logo di benvenuto sopra il contenitore: il seme che germoglia */}
       <div
         style={{
           display: "flex",
+          flexDirection: "column",
           alignItems: "center",
-          gap: 10,
-          marginBottom: 20,
+          gap: 12,
+          marginBottom: 24,
         }}
       >
         <img
           src="/favicon.png"
-          alt="Logo"
-          width={34}
-          height={34}
-          style={{ borderRadius: 7, display: "block" }}
+          alt="Seme che germoglia"
+          width={64}
+          height={64}
+          style={{
+            borderRadius: 14,
+            display: "block",
+            boxShadow: "0 4px 12px rgba(47, 93, 58, 0.25)",
+          }}
         />
         <span
           style={{
-            fontSize: 19,
-            fontWeight: 700,
+            fontSize: 22,
+            fontWeight: 800,
             color: "#1d3325",
             letterSpacing: -0.5,
           }}
@@ -73,68 +68,85 @@ export default function LoginCard() {
           Il mio giardino digitale
         </span>
       </div>
-      <p
+
+      <form
+        onSubmit={handleSubmit}
         style={{
-          fontSize: 14,
-          color: "#5a7a60",
-          marginBottom: 24,
-        }}
-      >
-        Accedi all&#8217;area riservata per gestire le tue note.
-      </p>
-      <label
-        htmlFor="password"
-        style={{
-          display: "block",
-          fontWeight: 600,
-          fontSize: 14,
-          color: "#1d3325",
-          marginBottom: 8,
-        }}
-      >
-        Password
-      </label>
-      <input
-        id="password"
-        name="password"
-        type="password"
-        autoComplete="current-password"
-        required
-        value={password}
-        onChange={(event) => setPassword(event.target.value)}
-        style={{
+          background: "#ffffff",
+          border: "1px solid #b9cfb0",
+          borderRadius: 20,
+          padding: 36,
+          maxWidth: 420,
           width: "100%",
-          padding: "10px 12px",
-          borderRadius: 8,
-          border: "1px solid #9db894",
-          marginBottom: 14,
-          fontSize: 14,
-          outline: "none",
-          boxShadow: "inset 0 1px 2px rgba(0,0,0,0.06)",
+          boxShadow: "0 20px 48px rgba(47, 93, 58, 0.14)",
         }}
-      />
-      {error ? (
-        <p role="alert" style={{ color: "#a33", fontSize: 13, marginBottom: 14 }}>
-          {error}
+      >
+        <p
+          style={{
+            fontSize: 15,
+            color: "#5a7a60",
+            marginBottom: 26,
+            textAlign: "center",
+          }}
+        >
+          Accedi all&#8217;area riservata per gestire le tue note.
         </p>
-      ) : null}
-      <button
-        type="submit"
-        disabled={pending}
-        style={{
-          width: "100%",
-          padding: "10px 12px",
-          borderRadius: 8,
-          border: "none",
-          background: "#2f5d3a",
-          color: "#fff",
-          fontWeight: 600,
-          fontSize: 15,
-          cursor: pending ? "wait" : "pointer",
-        }}
-      >
-        {pending ? "Accesso in corso…" : "Accedi"}
-      </button>
-    </form>
+        <label
+          htmlFor="password"
+          style={{
+            display: "block",
+            fontWeight: 700,
+            fontSize: 14,
+            color: "#1d3325",
+            marginBottom: 8,
+          }}
+        >
+          Password
+        </label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          autoComplete="current-password"
+          required
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+          style={{
+            width: "100%",
+            padding: "11px 14px",
+            borderRadius: 10,
+            border: "1px solid #9db894",
+            marginBottom: 18,
+            fontSize: 15,
+            outline: "none",
+            boxShadow: "inset 0 1px 3px rgba(0,0,0,0.06)",
+            background: "#fafafa",
+          }}
+        />
+        {error ? (
+          <p role="alert" style={{ color: "#c0392b", fontSize: 13, marginBottom: 18 }}>
+            {error}
+          </p>
+        ) : null}
+        <button
+          type="submit"
+          disabled={pending}
+          style={{
+            width: "100%",
+            padding: "11px 14px",
+            borderRadius: 10,
+            border: "none",
+            background: "#2f5d3a",
+            color: "#fff",
+            fontWeight: 700,
+            fontSize: 15,
+            cursor: pending ? "wait" : "pointer",
+            boxShadow: "0 4px 10px rgba(47, 93, 58, 0.3)",
+          }}
+        >
+          {pending ? "Accesso in corso…" : "Accedi"}
+        </button>
+      </form>
+    </>
   );
 }
